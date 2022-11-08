@@ -8,6 +8,8 @@ conda activate gfgan
 ```
 
 ### Model file
+Place the model file in 
+```experiments/pretrained_models/GFPGANv1.3.pth```
 ```
 https://drive.google.com/file/d/124aNK-sATUxOBDhILfilmT36k2uj_Wty/view
 ```
