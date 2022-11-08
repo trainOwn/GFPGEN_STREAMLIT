@@ -58,7 +58,7 @@ args = parser.parse_args()
 # else:
 #     img_list = sorted(glob.glob(os.path.join(args.input, '*')))
 img_list = ["./inputs/upload/Blake_Lively.jpg"]
-image_file = st.file_uploader("Upload Your Image", type=['jpg', 'jpeg', 'png'], accept_multiple_files=False)
+
 os.makedirs(args.output, exist_ok=True)
 
 # ------------------------ set up background upsampler ------------------------
@@ -101,11 +101,20 @@ else:
 
 # determine model paths
 model_path = os.path.join('experiments/pretrained_models', model_name + '.pth')
+# if not os.path.isfile(model_path):
+#     model_path = os.path.join('realesrgan/weights', model_name + '.pth')
 if not os.path.isfile(model_path):
-    model_path = os.path.join('realesrgan/weights', model_name + '.pth')
-if not os.path.isfile(model_path):
-    raise ValueError(f'Model {model_name} does not exist.')
+    st.write("")
+    url = 'https://drive.google.com/uc?id=124aNK-sATUxOBDhILfilmT36k2uj_Wty&export=download'
+    import gdown
+    with st.spinner('Downloading model file , please wait ...'):
+        gdown.download(url, model_path, quiet=False)
 
+    model_path = os.path.join('experiments/pretrained_models', model_name + '.pth')
+    # raise ValueError(f'Model {model_name} does not exist.')
+
+if "load_state" not in st.session_state:
+    st.session_state.load_state = False
 restorer = GFPGANer(
     model_path=model_path,
     upscale=args.upscale,
@@ -113,9 +122,11 @@ restorer = GFPGANer(
     channel_multiplier=channel_multiplier,
     bg_upsampler=bg_upsampler)
 
+image_file = st.file_uploader("Upload Your Image", type=['jpg', 'jpeg', 'png'], accept_multiple_files=False)
 # ------------------------ restore ------------------------
 # for img_path in img_list:
 if image_file is not None:
+    st.session_state.load_state = True
     # read image
     img_name = os.path.basename(img_list[0])
     print(f'Processing {img_name} ...')
