@@ -23,3 +23,6 @@ streamlit run wrapper.py
 ### Web Application 
 Click on browse image and setect the image you want to restore
 
+# Results
+![](results/one.png)
+![](results/two.png)
